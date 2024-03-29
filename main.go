@@ -16,7 +16,7 @@ var (
 	// EnableTrustIssuer 是否启用信任发行者功能
 	EnableTrustIssuer = true
 	// EnableVcIssueLog 是否启用VC凭证发行日志功能
-	EnableVcIssueLog = false
+	EnableVcIssueLog = true
 )
 
 func main() {
