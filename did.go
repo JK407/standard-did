@@ -678,25 +678,67 @@ func isInList(pk string, keys []string) bool {
 	return false
 }
 
-// AddBlackList 添加黑名单
+//// AddBlackList 添加黑名单
+//func (e *DidContract) AddBlackList(dids []string) error {
+//	if !e.isAdmin() {
+//		return errors.New("only admin can add black list")
+//	}
+//	for _, did := range dids {
+//		// check did valid
+//		valid, err := e.IsValidDid(did)
+//		if err != nil {
+//			return err
+//		}
+//		if !valid {
+//			return errors.New("did not found")
+//		}
+//		err = e.dal.putBlackList(did)
+//		if err != nil {
+//			return err
+//		}
+//	}
+//	e.EmitAddBlackListEvent(dids)
+//	return nil
+//}
+
+// 自定义错误类型，用于累积错误
+type AccumulatedError struct {
+	Errors []string
+}
+
+func (ae *AccumulatedError) Error() string {
+	return strings.Join(ae.Errors, "; ")
+}
+
+// // AddBlackList 添加黑名单
 func (e *DidContract) AddBlackList(dids []string) error {
 	if !e.isAdmin() {
 		return errors.New("only admin can add black list")
 	}
+
+	var accumulatedError AccumulatedError
+
 	for _, did := range dids {
-		// check did valid
 		valid, err := e.IsValidDid(did)
 		if err != nil {
-			return err
+			accumulatedError.Errors = append(accumulatedError.Errors, fmt.Sprintf("Error checking validity of %s: %v", did, err))
+			continue // 继续处理下一个DID
 		}
 		if !valid {
-			return errors.New("did not found")
+			accumulatedError.Errors = append(accumulatedError.Errors, fmt.Sprintf("DID not valid: %s", did))
+			continue // 继续处理下一个DID
 		}
 		err = e.dal.putBlackList(did)
 		if err != nil {
-			return err
+			accumulatedError.Errors = append(accumulatedError.Errors, fmt.Sprintf("Error adding %s to blacklist: %v", did, err))
+			continue // 继续处理下一个DID
 		}
 	}
+
+	if len(accumulatedError.Errors) > 0 {
+		return &accumulatedError // 返回累积的错误
+	}
+
 	e.EmitAddBlackListEvent(dids)
 	return nil
 }
