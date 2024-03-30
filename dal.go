@@ -297,49 +297,49 @@ func (dal *Dal) searchBlackList(didSearch string, start int, count int) ([]strin
 	}
 	defer iter.Close()
 	var didSlice []string
-	i := 0
-	if count == 0 {
-		count = defaultSearchCount
-	}
-	for iter.HasNext() {
-		_, _, value, err1 := iter.Next()
-		if err1 != nil {
-			return nil, err1
-		}
-		if i >= start+count {
-			break
-		}
-		i++
-		if i < start {
-			continue
-		}
-		didSlice = append(didSlice, string(value))
-
-	}
-
-	//// fixed
-	//i := 0         // 用于追踪当前迭代到的项
-	//collected := 0 // 用于追踪已收集的项的数量
-	//
+	//i := 0
 	//if count == 0 {
 	//	count = defaultSearchCount
 	//}
-	//
 	//for iter.HasNext() {
-	//	if collected >= count {
-	//		break
-	//	}
 	//	_, _, value, err1 := iter.Next()
 	//	if err1 != nil {
 	//		return nil, err1
+	//	}
+	//	if i >= start+count {
+	//		break
 	//	}
 	//	i++
 	//	if i < start {
 	//		continue
 	//	}
 	//	didSlice = append(didSlice, string(value))
-	//	collected++
+	//
 	//}
+
+	// fixed
+	i := 0         // 用于追踪当前迭代到的项
+	collected := 0 // 用于追踪已收集的项的数量
+
+	if count == 0 {
+		count = defaultSearchCount
+	}
+
+	for iter.HasNext() {
+		if collected >= count {
+			break
+		}
+		_, _, value, err1 := iter.Next()
+		if err1 != nil {
+			return nil, err1
+		}
+		i++
+		if i < start {
+			continue
+		}
+		didSlice = append(didSlice, string(value))
+		collected++
+	}
 	return didSlice, nil
 }
 
