@@ -684,7 +684,15 @@ func (e *DidContract) AddBlackList(dids []string) error {
 		return errors.New("only admin can add black list")
 	}
 	for _, did := range dids {
-		err := e.dal.putBlackList(did)
+		// check did valid
+		valid, err := e.IsValidDid(did)
+		if err != nil {
+			return err
+		}
+		if !valid {
+			return errors.New("did not found")
+		}
+		err = e.dal.putBlackList(did)
 		if err != nil {
 			return err
 		}
