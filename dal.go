@@ -287,6 +287,8 @@ func (dal *Dal) deleteBlackList(did string) error {
 	}
 	return nil
 }
+
+// fixme 当start=1，count为2时返回的是三条数据
 func (dal *Dal) searchBlackList(didSearch string, start int, count int) ([]string, error) {
 	//从数据库中查询BlackList迭代器
 	iter, err := dal.Db().NewIteratorPrefixWithKeyField(keyBlackList, processDid4Key(didSearch))
@@ -295,24 +297,48 @@ func (dal *Dal) searchBlackList(didSearch string, start int, count int) ([]strin
 	}
 	defer iter.Close()
 	var didSlice []string
-	i := 0
+	//i := 0
+	//if count == 0 {
+	//	count = defaultSearchCount
+	//}
+	//for iter.HasNext() {
+	//	_, _, value, err1 := iter.Next()
+	//	if err1 != nil {
+	//		return nil, err1
+	//	}
+	//	if i >= start+count {
+	//		break
+	//	}
+	//	i++
+	//	if i < start {
+	//		continue
+	//	}
+	//	didSlice = append(didSlice, string(value))
+	//
+	//}
+
+	// fixed
+	i := 0         // 用于追踪当前迭代到的项
+	collected := 0 // 用于追踪已收集的项的数量
+
 	if count == 0 {
 		count = defaultSearchCount
 	}
+
 	for iter.HasNext() {
+		if collected >= count {
+			break
+		}
 		_, _, value, err1 := iter.Next()
 		if err1 != nil {
 			return nil, err1
-		}
-		if i >= start+count {
-			break
 		}
 		i++
 		if i < start {
 			continue
 		}
 		didSlice = append(didSlice, string(value))
-
+		collected++
 	}
 	return didSlice, nil
 }
