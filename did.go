@@ -294,7 +294,14 @@ func (e *DidContract) GetDidByPubkey(pk string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
+	// check did valid
+	valid, err := e.IsValidDid(did)
+	if err != nil {
+		return "", err
+	}
+	if !valid {
+		return "", errors.New("invalid did")
+	}
 	return did, nil
 }
 
@@ -312,7 +319,19 @@ func (e *DidContract) GetDidDocumentByPubkey(pk string) (string, error) {
 // GetDidByAddress 根据地址获取DID
 func (e *DidContract) GetDidByAddress(address string) (string, error) {
 	//get did by address
-	return e.dal.getDidByAddress(address)
+	did, err := e.dal.getDidByAddress(address)
+	if err != nil {
+		return "", err
+	}
+	// check did valid
+	valid, err := e.IsValidDid(did)
+	if err != nil {
+		return "", err
+	}
+	if !valid {
+		return "", errors.New("invalid did")
+	}
+	return did, nil
 }
 
 // GetDidDocumentByAddress 根据地址获取DID Document
