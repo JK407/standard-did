@@ -687,7 +687,7 @@ func (e *DidContract) AddBlackList(dids []string) error {
 		// check did valid
 		valid, err := e.IsValidDid(did)
 		if err != nil {
-			return err
+			return errors.New("did : " + did + ", " + err.Error())
 		}
 		if !valid {
 			return errors.New("did not found")
