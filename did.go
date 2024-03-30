@@ -710,7 +710,7 @@ func (ae *AccumulatedError) Error() string {
 	return strings.Join(ae.Errors, "; ")
 }
 
-// // AddBlackList 添加黑名单
+// AddBlackList 添加黑名单
 func (e *DidContract) AddBlackList(dids []string) error {
 	if !e.isAdmin() {
 		return errors.New("only admin can add black list")
