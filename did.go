@@ -494,7 +494,8 @@ func (e *DidContract) VerifyVp(vpJson string) (bool, error) {
 		//如果userDid和vc中的id不一致，则验证是否存在delegate，如果没有对应的delegate，则验证失败
 		if userDid != vc.GetCredentialSubjectID() {
 			//验证是否存在delegate
-			delegates, err1 := e.dal.searchDelegate(userDid, vc.GetCredentialSubjectID(), vc.ID,
+			//delegates, err1 := e.dal.searchDelegate(userDid, vc.GetCredentialSubjectID(), vc.ID,
+			delegates, err1 := e.dal.searchDelegate(vc.GetCredentialSubjectID(), userDid, vc.ID,
 				defaultDelegateAction, 0, 0)
 			if err1 != nil {
 				return false, err1

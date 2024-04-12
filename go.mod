@@ -9,7 +9,6 @@ require (
 	chainmaker.org/chainmaker/pb-go/v2 v2.3.0
 	github.com/buger/jsonparser v1.1.1
 	github.com/golang/mock v1.6.0
-	github.com/square/go-jose v2.6.0+incompatible
 	github.com/stretchr/testify v1.8.1
 	github.com/xeipuuv/gojsonschema v1.2.0
 )
@@ -55,7 +54,6 @@ require (
 	google.golang.org/grpc v1.41.1 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
-	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

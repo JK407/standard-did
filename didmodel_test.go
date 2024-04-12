@@ -188,9 +188,10 @@ func generateVC(user, userName, id, phone, issuer string) string {
 	signerPrvKey := getPrivateKey(issuer)
 	signature := signVC(vc, signerPrvKey)
 	vc.Proof = &Proof{
-		Type:               "SM2Signature",
-		Created:            "2023-01-01T00:00:00Z",
-		ProofPurpose:       "assertionMethod",
+		Type:    "SM2Signature",
+		Created: "2023-01-01T00:00:00Z",
+		//ProofPurpose:       "assertionMethod",
+		ProofPurpose:       "authentication",
 		VerificationMethod: issuerDid + "#keys-1",
 		ProofValue:         signature,
 	}
